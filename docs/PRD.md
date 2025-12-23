@@ -1,172 +1,169 @@
-# Vibe navigator需求文档
+# Vibe Navigator需求文档V2.0
 
 ## 1. 产品定义 (Product Definition)
 
 ### 1.1 核心价值主张
 
-Vibe Navigator 是一个**“开发者优先”的资源情报与配置中枢**。
-它不是一个简单的书签列表，而是一套**“省钱与提效的解决方案”**。它通过自动化手段捕获全网的高价值 AI 资源，经过 LLM 清洗和人工确认，最终以结构化的形式（JSON/Config）交付给用户。
+Vibe Navigator 是为 AI 时代开发者（Vibe Coders）打造的 **全方位资源与战术情报中枢**。
+我们不只是聚合链接，而是提供构建 AI 应用所需的**四大核心要素（4 Pillars）**。我们的目标是消除“发现”到“使用”的摩擦，提供**开箱即用**的配置、标准化的工作流（OpenSpec）及最佳实践蓝图。
 
 ### 1.2 用户画像
 
-- **Vibe Coders**：使用 Cursor/Windsurf 等 AI IDE，但受限于昂贵的 SOTA 模型（Claude 3.7/GPT-4o）成本的独立开发者。
-- **Token Optimizers**：对 Context Window 极其敏感，追求用最少的 Token 换取最高质量代码的极客。
+- **Vibe Coders**: 追求 "Flow State" (心流) 的开发者，深度依赖 Cursor/Trae/Windsurf 等 AI IDE。
+- **AI Engineers**: 需要集成 MCP、Tool Use (Skills) 和低成本算力到产品中的工程师。
 
 ---
 
-## 2. 核心功能模块 (Functional Modules)
+## 2. 核心功能板块 (The 4 Pillars)
 
-### 2.1 模块 A：API 省钱地图 (Token Saver)
+### 2.1 板块 A: Vibe Compute (算力·燃料)
 
-*目标：聚合分散的免费/低价算力，提供“开箱即用”的配置。*
+*定义：驱动 AI 运转的基础能源。*
 
-- **资源分类**：
-    - `Free Tier`：永久免费或每日刷新额度（如 Gemini Flash 1500 RPM, GitHub Models）。
-    - `Credits`：注册赠送金（SiliconFlow, DeepSeek 官方）。
-    - `Relay`：经过验证的高稳定性、低倍率中转站。
-- **智能卡片设计**：
-    - **状态看板**：实时显示延迟 (Latency) 和 存活状态 (Health)。
-    - **配置生成器 (Config Generator)**：
-        - 提供 `Copy for Cursor` (`.cursorrules` snippet)。
-        - 提供 `Copy for Roo Code` (`config.json` snippet)。
-        - 提供 `Copy .env`。
-    - *User Story*: 用户点击“SiliconFlow”卡片 -> 自动复制 OpenAI 兼容格式的 BaseURL -> 用户粘贴进 IDE -> 开始编程。
+- **收录范围**：聚合器 (SiliconFlow, OpenRouter)、免费层 (Gemini Flash)、本地 (Ollama)。
+- **核心交互 (Action)**：**"Connect Dashboard"**
+    - 点击卡片弹出模态框，分别展示 `Base URL`, `Model Name`, `API Key` (占位符)。
+    - 提供适配 Cursor ("Override OpenAI URL") 和 VSCode 的一键复制按钮。
 
-### 2.2 模块 B：Vibe Intel (前沿方法论)
+### 2.2 板块 B: Vibe Tools (工具·装备)
 
-*目标：提供“高质量上下文”的标准化模版。*
+*定义：承载 AI 编程的 IDE 与 插件。*
 
-- **SDD (Spec-Driven Development)**：
-    - 收录并托管 OpenSpec 标准文档。
-    - 提供 Prompt 模板：“如何让 AI 先写 Spec 再写代码”。
-- **Context Engineering**：
-    - **Memory Bank**: 提供针对不同技术栈（Next.js/Python/Go）的 `.cursorrules` / `projectContext.md` 黄金模板下载。
-    - **Prompt Caching**: 教程与 Header 配置代码，教用户如何利用 Cache 降低 90% 长上下文成本。
-- **Protocol Hub**:
-    - 精选 MCP Server 列表（连接数据库、Git、Linear）。
+- **收录范围**：IDE (Cursor, Trae), 插件 (Roo Code), CLI (Aider, Goose)。
+- **核心交互 (Action)**：**"Quick Setup"**
+    - 提供官方下载/安装链接。
+    - 提供工具专属的配置文件下载（例如 Roo Code 的 `config.json` 推荐设置）。
 
-### 2.3 模块 C：Vibe Radar (自动化情报捕获) **[NEW]**
+### 2.3 板块 C: Vibe Skills (技巧·大脑)
 
-*目标：从手动录入进化为“AI 猎手”。*
+*定义：提升 AI 表现的上下文、规范与扩展能力。*
 
-- **监听层 (The Ear)**：
-    - 监控 GitHub Trending (`#llm`, `#ai-infrastructure`)。
-    - 监控 Hacker News / Reddit (LocalLLaMA) 高热度提及。
-- **清洗层 (The Brain)**：
-    - 利用廉价模型（Gemini Flash / DeepSeek V3）读取网页内容。
-    - 执行结构化提取：去除营销废话，提取 API Endpoint、价格、文档链接。
-- **交付层 (The Hand)**：
-    - **GitOps Workflow**：系统自动生成 Pull Request 提交到仓库，等待 Admin (你) 点击 Merge。
+- **收录范围**：
+    - **Capabilities**: MCP Servers 配置, Claude/Open Skills (Tool Use 定义 JSON)。
+    - **Context**: `.cursorrules` 黄金模板, System Prompts。
+    - **Workflow**: OpenSpec (SDD 开发规范文档)。
+- **核心交互 (Action)**：**"View & Copy"**
+    - 对于 `JSON` (Skills/MCP)：提供带高亮的代码块复制。
+    - 对于 `Markdown` (Rules/Specs)：提供预览抽屉 (Drawer) 和一键复制全文。
+
+### 2.4 板块 D: Vibe Blueprints (蓝图·阵地)
+
+*定义：AI-First 的项目脚手架。*
+
+- **收录范围**：预置了 AI 配置的 Starter Kits (Next.js AI Starter), 适合 AI 阅读文档的框架。
+- **核心交互 (Action)**：**"Initialize"**
+    - 提供一键复制终端命令 (如 `git clone ...` 或 `npx create ...`)。
 
 ---
 
 ## 3. 技术架构 (Technical Architecture)
 
-### 3.1 核心技术栈 (The Next.js Vibe Stack)
+### 3.1 核心技术栈
 
-选择 Next.js 是为了兼顾前端性能与后端自动化逻辑。
+- **Framework**: Next.js 15 (App Router)
+- **Styling**: Tailwind CSS v4 + Shadcn/UI (Zinc Theme)
+- **Icons**: Lucide React
+- **Data Source**: Local JSON Files (Git-as-Database)
+- **Type Safety**: TypeScript (Strict Mode)
 
-- **Framework**: **Next.js 15 (App Router)**
-    - 利用 React Server Components (RSC) 实现极致的首屏加载。
-    - 利用 **ISR (Incremental Static Regeneration)**：每 1 小时重新生成页面，保证数据新鲜度，同时无需每次都查数据库。
-- **UI System**: **Tailwind CSS v4** + **Shadcn/UI** + **Framer Motion** (微交互)。
-- **Data Storage**: **Git-as-Database** (JSON Files in Repo)。
-    - *Why*: 免费、版本控制、方便回滚、利于自动化 PR 流程。
-- **Deployment**: **Vercel** (首选) 或 Cloudflare Pages (适配 Next.js 略麻烦，Vercel 对 API Route 支持更好)。
+### 3.2 关键组件逻辑
 
-### 3.2 自动化流水线 (Automation Pipeline)
-
-### A. 资源抓取与清洗 (Cron Job)
-
-- **运行环境**: GitHub Actions 或 Vercel Cron。
-- **逻辑流程**:
-    1. `Crawler Script`: 访问预设的 Source List (如 GitHub Topics)。
-    2. `Filter (AI SDK)`: 调用 DeepSeek V3 API，Prompt: *"Extract tool name, url, and pricing model. Return JSON. If looks like spam, return null."*
-    3. `Dedup`: 与现有的 `data/apis.json` 比对去重。
-    4. `PR Bot`: 如果有新资源，调用 GitHub API 创建 PR: `feat(radar): add new resource [Name]`。
-
-### B. 健康监测 (Health Check)
-
-- **运行环境**: Next.js API Route (`/api/health-check`) + Cron。
-- **逻辑**: 并发请求所有 API 的 `/models` 端点（仅 header 或极短 body），记录状态码和耗时。更新 `data/status.json`。
+- **Tabs Navigation**: 首页需包含 `Compute | Tools | Skills | Blueprints` 顶部切换栏。
+- **Smart Resource Card**: 一个通用的 Card 组件，但根据 Resource Type 动态渲染 `CardFooter` 的操作按钮。
 
 ---
 
 ## 4. 数据结构 (Data Schema)
 
-这是核心数据资产的定义，AI 爬虫必须输出此格式。
+使用 Discriminated Union 严格定义四大板块。
 
 ```tsx
 // types/resource.ts
 
-export type PricingModel = 'Free' | 'Freemium' | 'Paid' | 'Credit';
+export type Category = 'compute' | 'tool' | 'skill' | 'blueprint';
 
-export interface APIResource {
-  id: string; // unique slug, e.g., "siliconflow"
+// 通用元数据
+interface BaseResource {
+  id: string;
   name: string;
-  url: string; // Homepage
-  description: string; // One-line summary generated by AI
-  tags: string[]; // ["Free Tier", "OpenAI Compatible", "High Speed"]
-
-  // 核心价值数据
-  pricing: {
-    model: PricingModel;
-    detail: string; // e.g., "Daily 1500 RPM free"
-  };
-
-  // 技术配置数据
-  config: {
-    endpoint: string; // e.g., "<https://api.siliconflow.cn/v1>"
-    auth_type: "Bearer" | "API-Key";
-    model_list_url?: string;
-  };
-
-  // 自动化维护字段
-  added_at: string; // ISO Date
-  source?: string; // e.g., "Auto-crawled from HN"
+  description: string;
+  url: string; // 官网或文档链接
+  tags: string[];
+  added_at: string;
 }
 
+// 1. Compute (算力)
+export interface ComputeResource extends BaseResource {
+  category: 'compute';
+  pricing: {
+    model: 'Free' | 'Freemium' | 'Paid';
+    detail: string; // e.g. "Daily 1500 RPM"
+  };
+  config: {
+    endpoint: string;
+    model_name_demo: string; // e.g. "deepseek-ai/DeepSeek-V3"
+    auth_doc_url?: string;
+  };
+}
+
+// 2. Tool (工具)
+export interface ToolResource extends BaseResource {
+  category: 'tool';
+  price_model: 'Open Source' | 'Commercial' | 'Free';
+}
+
+// 3. Skill (技巧 - 结构最复杂)
+export interface SkillResource extends BaseResource {
+  category: 'skill';
+  sub_category: 'cursor-rule' | 'mcp-server' | 'open-spec' | 'claude-skill';
+  content: {
+    type: 'json' | 'markdown' | 'text'; // 用于前端决定如何渲染预览
+    body: string; // 实际内容。如果是长文本，建议存储在 public/skills/ 下并通过 fetch 获取，MVP 阶段可直接存 JSON string。
+  };
+}
+
+// 4. Blueprint (蓝图)
+export interface BlueprintResource extends BaseResource {
+  category: 'blueprint';
+  repo_url: string;
+  install_cmd: string; // e.g. "git clone [<https://github.com/>](<https://github.com/>)..."
+  stack: string[];     // ['Next.js', 'Supabase']
+}
+
+export type VibeResource = ComputeResource | ToolResource | SkillResource | BlueprintResource;
 ```
 
----
+## 5. 开发路线图 (Roadmap)
 
-## 5. 开发路线图 (Development Roadmap)
+### Phase 1: 架构重构 (The Refactor)
 
-### Phase 1: The Foundation (Day 1-2)
-
-- **Goal**: 上线静态展示页，手动录入 Top 10 核心资源。
+- **Goal**: 从单一列表升级为四大板块视图。
 - **Tasks**:
-    - 初始化 Next.js 15 + Shadcn 项目。
-    - 定义 `data/apis.json` 并录入数据。
-    - 开发首页：搜索栏 + 资源网格布局。
-    - 开发详情卡片：集成“一键复制配置”功能 (Clipboard API)。
+    1. 更新 `types/resource.ts` 定义。
+    2. 重命名并重构 `data/resources.json`，录入 4 条不同类型的种子数据。
+    3. 重写 `app/page.tsx`，增加 Tabs 分类切换。
+    4. 升级 `ResourceCard` 组件，实现动态 Footer。
 
-### Phase 2: The Radar (Day 3-5)
+### Phase 2: 内容填充 (The Content)
 
-- **Goal**: 实现半自动化录入。
+- **Goal**: 录入高价值数据。
 - **Tasks**:
-    - 编写 `/lib/crawler.ts`: 集成 Vercel AI SDK。
-    - 编写 `scripts/scan-sources.ts`: 简单的脚本，本地运行，抓取 GitHub Trending 并输出 JSON。
-    - 手动验证抓取效果，调整 System Prompt 以提高准确率。
+    1. 录入 OpenSpec 标准模板。
+    2. 录入真实好用的 .cursorrules。
+    3. 录入 SiliconFlow 和 Gemini 配置。
 
-### Phase 3: Total Automation (Day 6+)
+### Phase 3: 自动化 (The Radar)
 
-- **Goal**: 完整的 GitOps 闭环与健康监测。
-- **Tasks**:
-    - 部署 GitHub Actions：每天凌晨 2 点运行 Crawler 并提交 PR。
-    - 实现 API 健康状态检测，并在前端展示绿点/红点。
-    - SEO 优化：为每个资源生成静态详情页。
+- **Goal**: 自动发现新资源。
+- **Tasks**: 集成 LLM 爬虫脚本。
 
 ---
 
 ## 6. UI 设计细节 (Visual Specs)
 
-- **Color Palette**:
-    - `Background`: `#09090b` (Zinc 950 - 极黑)
-    - `Card`: `#18181b` (Zinc 900) + 1px Border `#27272a` (Zinc 800)
-    - `Primary`: `#fafafa` (Zinc 50)
-    - `Accent`: `#22c55e` (Green 500 - 用于健康状态)
-- **Typography**: `Geist Sans` (UI) + `Geist Mono` (代码/配置)。
-- **Interaction**:
-    - Hover 卡片时，显示微弱的 "Glow" 效果。
-    - 点击复制按钮时，按钮变为 "Copied!" 并带有触觉反馈动画。
+- **主题**: Zinc Dark (`#09090b` 背景)。
+- **布局**: 响应式 Grid (移动端 1 列，桌面端 3 列)。
+- **交互**:
+    - **Compute**: 点击 -> Dialog (模态框)。
+    - **Skill**: 点击 -> Sheet/Drawer (侧边抽屉预览代码)。
+    - **Tool/Blueprint**: 点击 -> Toast 提示复制成功或跳转。

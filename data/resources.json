@@ -1,0 +1,66 @@
+[
+  {
+    "id": "siliconflow",
+    "name": "SiliconFlow",
+    "description": "高性能 AI 推理服务，支持多种模型",
+    "category": "compute",
+    "provider": "SiliconFlow",
+    "url": "https://siliconflow.cn",
+    "features": ["高并发", "低延迟", "支持多模型", "灵活计费"],
+    "pricing": "按调用次数计费",
+    "status": "active",
+    "createdAt": "2025-12-23T00:00:00Z",
+    "updatedAt": "2025-12-23T00:00:00Z",
+    "config": {
+      "apiKey": "sk-xxx",
+      "baseUrl": "https://api.siliconflow.cn/v1",
+      "model": "Qwen/Qwen2.5-72B-Instruct"
+    }
+  },
+  {
+    "id": "roo-code",
+    "name": "Roo Code",
+    "description": "AI 驱动的代码编辑器和开发工具",
+    "category": "tool",
+    "provider": "Roo Code",
+    "url": "https://roocode.com",
+    "features": ["AI 代码补全", "智能重构", "多语言支持", "团队协作"],
+    "pricing": "免费版 + 付费套餐",
+    "status": "active",
+    "createdAt": "2025-12-23T00:00:00Z",
+    "updatedAt": "2025-12-23T00:00:00Z",
+    "toolType": "ide"
+  },
+  {
+    "id": "open-spec",
+    "name": "OpenSpec",
+    "description": "开放 API 规范生成和管理工具",
+    "category": "skill",
+    "provider": "OpenSpec",
+    "url": "https://openspec.dev",
+    "features": ["自动生成 API 文档", "支持 OpenAPI 3.0", "实时预览", "版本控制"],
+    "pricing": "开源免费",
+    "status": "beta",
+    "createdAt": "2025-12-23T00:00:00Z",
+    "updatedAt": "2025-12-23T00:00:00Z",
+    "skillType": "open-spec",
+    "content": "# OpenSpec API Specification\n\nThis is a sample OpenAPI specification for the OpenSpec API.\n\n```yaml\nopenapi: 3.0.0\ninfo:\n  title: OpenSpec API\n  version: 1.0.0\npaths:\n  /specs:\n    get:\n      summary: Get all specifications\n      responses:\n        '200':\n          description: A list of specifications\n```",
+    "runtime": "browser"
+  },
+  {
+    "id": "nextjs-ai-starter",
+    "name": "Next.js AI Starter",
+    "description": "Next.js 15 AI 应用启动模板",
+    "category": "blueprint",
+    "provider": "Vibe Navigator",
+    "url": "https://github.com/vibenavigator/nextjs-ai-starter",
+    "features": ["Next.js 15", "Tailwind CSS v4", "Shadcn/UI", "OpenAI Integration"],
+    "pricing": "开源免费",
+    "status": "active",
+    "createdAt": "2025-12-23T00:00:00Z",
+    "updatedAt": "2025-12-23T00:00:00Z",
+    "install_cmd": "npx create-next-app@latest my-ai-app -e https://github.com/vibenavigator/nextjs-ai-starter",
+    "tech_stack": ["Next.js", "TypeScript", "Tailwind CSS", "OpenAI API"],
+    "stars": 1200
+  }
+]

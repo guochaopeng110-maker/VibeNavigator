@@ -1,11 +1,11 @@
-import { Resource } from "@/types/resource";
+import { ComputeResource } from "@/types/resource";
 
 /**
  * Generate .env format configuration string
- * @param resource Resource object
+ * @param resource ComputeResource object
  * @returns .env format string
  */
-export function generateEnvFormat(resource: Resource): string {
+export function generateEnvFormat(resource: ComputeResource): string {
   const { name, config } = resource;
   const apiKey = config.apiKey === "sk-xxx" ? "<YOUR_API_KEY>" : config.apiKey;
   
@@ -18,10 +18,10 @@ MODEL=${config.model}
 
 /**
  * Generate .cursorrules JSON snippet
- * @param resource Resource object
+ * @param resource ComputeResource object
  * @returns JSON string for .cursorrules
  */
-export function generateCursorRules(resource: Resource): string {
+export function generateCursorRules(resource: ComputeResource): string {
   const { name, config } = resource;
   const apiKey = config.apiKey === "sk-xxx" ? "<YOUR_API_KEY>" : config.apiKey;
   
@@ -41,10 +41,10 @@ export function generateCursorRules(resource: Resource): string {
 
 /**
  * Generate Roo Code/Cline configuration JSON snippet
- * @param resource Resource object
+ * @param resource ComputeResource object
  * @returns JSON string for Roo Code
  */
-export function generateRooCode(resource: Resource): string {
+export function generateRooCode(resource: ComputeResource): string {
   const { name, config } = resource;
   const apiKey = config.apiKey === "sk-xxx" ? "<YOUR_API_KEY>" : config.apiKey;
   
