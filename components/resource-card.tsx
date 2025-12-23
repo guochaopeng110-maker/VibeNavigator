@@ -2,17 +2,31 @@
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
 import { Resource } from "@/types/resource";
+import { generateEnvFormat, generateCursorRules, generateRooCode } from "@/lib/config-generators";
 
 interface ResourceCardProps {
   resource: Resource;
 }
 
 export default function ResourceCard({ resource }: ResourceCardProps) {
-  const handleCopyConfig = () => {
-    const configString = JSON.stringify(resource.config, null, 2);
-    navigator.clipboard.writeText(configString);
-    alert("Config copied to clipboard!");
+  const handleCopy = async (content: string, type: string) => {
+    try {
+      await navigator.clipboard.writeText(content);
+      toast.success(`${type} config copied to clipboard!`);
+    } catch (error) {
+      toast.error(`Failed to copy ${type} config`);
+      console.error("Failed to copy:", error);
+    }
   };
 
   return (
@@ -46,9 +60,35 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
         </div>
       </CardContent>
       <CardFooter>
-        <Button onClick={handleCopyConfig} className="w-full bg-zinc-700 hover:bg-zinc-600">
-          Copy Config
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button className="w-full bg-zinc-700 hover:bg-zinc-600">
+              Copy Config ▾
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="bg-zinc-800 border-zinc-700 text-white">
+            <DropdownMenuLabel>Copy as</DropdownMenuLabel>
+            <DropdownMenuSeparator className="bg-zinc-700" />
+            <DropdownMenuItem 
+              className="hover:bg-zinc-700 cursor-pointer" 
+              onClick={() => handleCopy(generateEnvFormat(resource), ".env")}
+            >
+              Copy .env
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              className="hover:bg-zinc-700 cursor-pointer" 
+              onClick={() => handleCopy(generateCursorRules(resource), "Cursor")}
+            >
+              Copy for Cursor
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              className="hover:bg-zinc-700 cursor-pointer" 
+              onClick={() => handleCopy(generateRooCode(resource), "Roo Code")}
+            >
+              Copy for Roo Code
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </CardFooter>
     </Card>
   );
