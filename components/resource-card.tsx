@@ -355,6 +355,22 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
               <DialogHeader>
                 <DialogTitle className="text-xl font-bold">Connect to {resource.name}</DialogTitle>
               </DialogHeader>
+              {/* Display full model list in dialog */}
+              <div className="mt-4 mb-4">
+                <h4 className="text-sm font-medium text-zinc-300 mb-2">Available Models:</h4>
+                <div className="flex flex-wrap gap-2">
+                  {resource.models.map((model, index) => (
+                    <Badge 
+                      key={index} 
+                      className={model.is_free 
+                        ? "bg-green-900 text-green-300 hover:bg-green-800 border-green-700" 
+                        : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border-zinc-600"}
+                    >
+                      {model.name} {model.is_free ? '(Free)' : ''}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
               <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
                 <TabsList className="bg-zinc-800">
                   <TabsTrigger value="cursor">Cursor</TabsTrigger>
