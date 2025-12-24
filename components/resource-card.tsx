@@ -25,6 +25,7 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
+import { ExternalLink } from "lucide-react";
 import { 
   Resource, 
   ComputeResource, 
@@ -197,7 +198,8 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
               <div>
                 <h4 className="text-sm font-medium text-zinc-300 mb-2">Models</h4>
                 <div className="flex flex-wrap gap-2">
-                  {resource.models.map((model, index) => (
+                  {/* Render first 3 models */}
+                  {resource.models.slice(0, 3).map((model, index) => (
                     <Badge 
                       key={index} 
                       className={model.is_free 
@@ -207,6 +209,15 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
                       {model.name} {model.is_free ? '(Free)' : ''}
                     </Badge>
                   ))}
+                  {/* Render +n more badge if there are more than 3 models */}
+                  {resource.models.length > 3 && (
+                    <Badge 
+                      variant="secondary" 
+                      className="bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border-zinc-600"
+                    >
+                      +{resource.models.length - 3} more
+                    </Badge>
+                  )}
                 </div>
               </div>
               
@@ -267,60 +278,63 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
 
   // Render card footer based on resource type
   const renderCardFooter = () => {
-    if (isComputeResource(resource)) {
-      return (
-        <CardFooter>
+    return (
+      <CardFooter className="flex justify-between items-center">
+        {/* Left: Auxiliary Action - Visit Website/GitHub */}
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="gap-1 text-zinc-300 border-zinc-700 hover:bg-zinc-800" 
+          onClick={() => window.open(resource.url, "_blank", "noopener noreferrer")}
+        >
+          <ExternalLink className="h-3 w-3" />
+          {resource.id === "open-spec" ? "Visit GitHub" : "Visit Website"}
+        </Button>
+
+        {/* Right: Primary Action - Dynamic based on category */}
+        {isComputeResource(resource) && (
           <Button 
-            className="w-full bg-primary hover:bg-primary/90 text-white" 
+            variant="default" 
+            size="sm" 
+            className="bg-primary hover:bg-primary/90 text-white" 
             onClick={handleOpenDialog}
           >
             Connect
           </Button>
-        </CardFooter>
-      );
-    }
+        )}
 
-    if (isToolResource(resource)) {
-      return (
-        <CardFooter className="flex gap-2">
+        {isToolResource(resource) && (
           <Button 
-            className="flex-1 bg-zinc-700 hover:bg-zinc-600" 
-            onClick={() => window.open(resource.url, "_blank", "noopener noreferrer")}
-          >
-            Visit Website
-          </Button>
-          <Button 
-            className="flex-1 bg-primary hover:bg-primary/90" 
+            variant="default" 
+            size="sm" 
+            className="bg-primary hover:bg-primary/90 text-white" 
             onClick={handleOpenGuide}
           >
             Read Guide
           </Button>
-        </CardFooter>
-      );
-    }
+        )}
 
-    if (isSkillResource(resource)) {
-      return (
-        <CardFooter className="flex gap-2">
+        {isSkillResource(resource) && (
           <Button 
-            className="flex-1 bg-zinc-700 hover:bg-zinc-600" 
-            onClick={() => handleCopy(resource.content, "Skill Content")}
+            variant="default" 
+            size="sm" 
+            className="bg-primary hover:bg-primary/90 text-white" 
+            onClick={handleOpenGuide}
           >
-            Copy Content
+            View Detail
           </Button>
-        </CardFooter>
-      );
-    }
+        )}
 
-    // Blueprint resource or any other resource type
-    return (
-      <CardFooter>
-        <Button 
-          className="w-full bg-primary hover:bg-primary/90 text-white" 
-          onClick={() => window.open(resource.url, "_blank", "noopener noreferrer")}
-        >
-          View Repository
-        </Button>
+        {isBlueprintResource(resource) && (
+          <Button 
+            variant="default" 
+            size="sm" 
+            className="bg-primary hover:bg-primary/90 text-white" 
+            onClick={() => handleCopy(resource.install_cmd, "Install Command")}
+          >
+            Copy Clone
+          </Button>
+        )}
       </CardFooter>
     );
   };
@@ -336,111 +350,120 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
       {/* Compute Resource Connect Dialog */}
       {isComputeResource(resource) && (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="bg-zinc-900 border-zinc-800 text-white max-w-2xl">
-            <DialogHeader>
-              <DialogTitle className="text-xl font-bold">Connect to {resource.name}</DialogTitle>
-            </DialogHeader>
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
-              <TabsList className="bg-zinc-800">
-                <TabsTrigger value="cursor">Cursor</TabsTrigger>
-                <TabsTrigger value="roo-code">Roo Code</TabsTrigger>
-                <TabsTrigger value="aider">Aider</TabsTrigger>
-                <TabsTrigger value="open-webui">Open WebUI</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="cursor" className="mt-4">
-                <div className="space-y-3">
-                  <h4 className="text-sm font-medium text-zinc-300">Cursor Configuration</h4>
-                  <pre className="bg-zinc-800 p-4 rounded-md overflow-auto text-xs font-mono">
-                    {generateConfig(resource, "cursor")}
-                  </pre>
-                  <div className="flex justify-end">
-                    <Button 
-                      className="bg-zinc-700 hover:bg-zinc-600 text-sm" 
-                      onClick={() => handleCopy(generateConfig(resource, "cursor"), "Cursor Configuration")}
-                    >
-                      Copy Config
-                    </Button>
+          {isDialogOpen && (
+            <DialogContent className="bg-zinc-900 border-zinc-800 text-white max-w-2xl">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-bold">Connect to {resource.name}</DialogTitle>
+              </DialogHeader>
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
+                <TabsList className="bg-zinc-800">
+                  <TabsTrigger value="cursor">Cursor</TabsTrigger>
+                  <TabsTrigger value="roo-code">Roo Code</TabsTrigger>
+                  <TabsTrigger value="aider">Aider</TabsTrigger>
+                  <TabsTrigger value="open-webui">Open WebUI</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="cursor" className="mt-4">
+                  <div className="space-y-3">
+                    <h4 className="text-sm font-medium text-zinc-300">Cursor Configuration</h4>
+                    <pre className="bg-zinc-800 p-4 rounded-md overflow-auto text-xs font-mono">
+                      {generateConfig(resource, "cursor")}
+                    </pre>
+                    <div className="flex justify-end">
+                      <Button 
+                        className="bg-zinc-700 hover:bg-zinc-600 text-sm" 
+                        onClick={() => handleCopy(generateConfig(resource, "cursor"), "Cursor Configuration")}
+                      >
+                        Copy Config
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="roo-code" className="mt-4">
-                <div className="space-y-3">
-                  <h4 className="text-sm font-medium text-zinc-300">Roo Code Configuration</h4>
-                  <pre className="bg-zinc-800 p-4 rounded-md overflow-auto text-xs font-mono">
-                    {generateConfig(resource, "roo-code")}
-                  </pre>
-                  <div className="flex justify-end">
-                    <Button 
-                      className="bg-zinc-700 hover:bg-zinc-600 text-sm" 
-                      onClick={() => handleCopy(generateConfig(resource, "roo-code"), "Roo Code Configuration")}
-                    >
-                      Copy Config
-                    </Button>
+                </TabsContent>
+                
+                <TabsContent value="roo-code" className="mt-4">
+                  <div className="space-y-3">
+                    <h4 className="text-sm font-medium text-zinc-300">Roo Code Configuration</h4>
+                    <pre className="bg-zinc-800 p-4 rounded-md overflow-auto text-xs font-mono">
+                      {generateConfig(resource, "roo-code")}
+                    </pre>
+                    <div className="flex justify-end">
+                      <Button 
+                        className="bg-zinc-700 hover:bg-zinc-600 text-sm" 
+                        onClick={() => handleCopy(generateConfig(resource, "roo-code"), "Roo Code Configuration")}
+                      >
+                        Copy Config
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="aider" className="mt-4">
-                <div className="space-y-3">
-                  <h4 className="text-sm font-medium text-zinc-300">Aider Configuration</h4>
-                  <pre className="bg-zinc-800 p-4 rounded-md overflow-auto text-xs font-mono">
-                    {generateConfig(resource, "aider")}
-                  </pre>
-                  <div className="flex justify-end">
-                    <Button 
-                      className="bg-zinc-700 hover:bg-zinc-600 text-sm" 
-                      onClick={() => handleCopy(generateConfig(resource, "aider"), "Aider Configuration")}
-                    >
-                      Copy Config
-                    </Button>
+                </TabsContent>
+                
+                <TabsContent value="aider" className="mt-4">
+                  <div className="space-y-3">
+                    <h4 className="text-sm font-medium text-zinc-300">Aider Configuration</h4>
+                    <pre className="bg-zinc-800 p-4 rounded-md overflow-auto text-xs font-mono">
+                      {generateConfig(resource, "aider")}
+                    </pre>
+                    <div className="flex justify-end">
+                      <Button 
+                        className="bg-zinc-700 hover:bg-zinc-600 text-sm" 
+                        onClick={() => handleCopy(generateConfig(resource, "aider"), "Aider Configuration")}
+                      >
+                        Copy Config
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="open-webui" className="mt-4">
-                <div className="space-y-3">
-                  <h4 className="text-sm font-medium text-zinc-300">Open WebUI Configuration</h4>
-                  <pre className="bg-zinc-800 p-4 rounded-md overflow-auto text-xs font-mono">
-                    {generateConfig(resource, "open-webui")}
-                  </pre>
-                  <div className="flex justify-end">
-                    <Button 
-                      className="bg-zinc-700 hover:bg-zinc-600 text-sm" 
-                      onClick={() => handleCopy(generateConfig(resource, "open-webui"), "Open WebUI Configuration")}
-                    >
-                      Copy Config
-                    </Button>
+                </TabsContent>
+                
+                <TabsContent value="open-webui" className="mt-4">
+                  <div className="space-y-3">
+                    <h4 className="text-sm font-medium text-zinc-300">Open WebUI Configuration</h4>
+                    <pre className="bg-zinc-800 p-4 rounded-md overflow-auto text-xs font-mono">
+                      {generateConfig(resource, "open-webui")}
+                    </pre>
+                    <div className="flex justify-end">
+                      <Button 
+                        className="bg-zinc-700 hover:bg-zinc-600 text-sm" 
+                        onClick={() => handleCopy(generateConfig(resource, "open-webui"), "Open WebUI Configuration")}
+                      >
+                        Copy Config
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </TabsContent>
-            </Tabs>
-          </DialogContent>
+                </TabsContent>
+              </Tabs>
+            </DialogContent>
+          )}
         </Dialog>
       )}
 
-      {/* Tool Resource Guide Sheet */}
-      {isToolResource(resource) && (
+      {/* Guide/Detail Sheet - for Tool and Skill resources */}
+      {(isToolResource(resource) || isSkillResource(resource)) && (
         <Sheet open={isGuideOpen} onOpenChange={setIsGuideOpen}>
-          <SheetContent className="bg-zinc-900 border-zinc-800 text-white w-full sm:max-w-2xl">
-            <SheetHeader>
-              <SheetTitle className="text-xl font-bold">{resource.name} - Vibe Guide</SheetTitle>
-            </SheetHeader>
-            <div className="mt-6 bg-zinc-800 p-4 rounded-md overflow-auto max-h-[70vh]">
-              <ReactMarkdown>
-                {resource.guide}
-              </ReactMarkdown>
-            </div>
-            <SheetFooter className="mt-6 flex justify-end">
-              <Button 
-                className="bg-primary hover:bg-primary/90 text-white" 
-                onClick={() => handleCopy(resource.guide, "Guide Content")}
-              >
-                Copy Full Guide
-              </Button>
-            </SheetFooter>
-          </SheetContent>
+          {isGuideOpen && (
+            <SheetContent className="bg-zinc-900 border-zinc-800 text-white w-full sm:max-w-2xl">
+              <SheetHeader>
+                <SheetTitle className="text-xl font-bold">
+                  {resource.name} - {isToolResource(resource) ? 'Vibe Guide' : 'Detail'}
+                </SheetTitle>
+              </SheetHeader>
+              <div className="mt-6 bg-zinc-800 p-4 rounded-md overflow-auto max-h-[70vh]">
+                <ReactMarkdown>
+                  {isToolResource(resource) ? resource.guide : resource.content}
+                </ReactMarkdown>
+              </div>
+              <SheetFooter className="mt-6 flex justify-end">
+                <Button 
+                  className="bg-primary hover:bg-primary/90 text-white" 
+                  onClick={() => handleCopy(
+                    isToolResource(resource) ? resource.guide : resource.content, 
+                    isToolResource(resource) ? "Guide Content" : "Skill Content"
+                  )}
+                >
+                  Copy Full Content
+                </Button>
+              </SheetFooter>
+            </SheetContent>
+          )}
         </Sheet>
       )}
     </>
