@@ -26,6 +26,7 @@ import {
   ToolResource
 } from "@/types/resource";
 import { generateEnvFormat, generateRooCode } from "@/lib/config-generators";
+import ResourcePreview from "./resource-preview";
 
 interface ResourceCardProps {
   resource: Resource;
@@ -50,6 +51,7 @@ const isToolResource = (resource: Resource): resource is ToolResource => {
 
 export default function ResourceCard({ resource }: ResourceCardProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const handleCopy = async (content: string, type: string) => {
     try {
@@ -79,6 +81,14 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
 
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
+  };
+
+  const handleOpenPreview = () => {
+    setIsPreviewOpen(true);
+  };
+
+  const handleClosePreview = () => {
+    setIsPreviewOpen(false);
   };
 
   // Render card footer based on resource category
@@ -130,32 +140,46 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
               {previewContent}
             </div>
           </div>
-          <Button 
-            className="w-full bg-zinc-700 hover:bg-zinc-600" 
-            onClick={() => handleCopy(resource.content, "Skill Content")}
-          >
-            Copy Full Content
-          </Button>
+          <div className="flex gap-2 w-full">
+            <Button 
+              className="flex-1 bg-zinc-700 hover:bg-zinc-600" 
+              onClick={() => handleCopy(resource.content, "Skill Content")}
+            >
+              Copy Content
+            </Button>
+            <Button 
+              className="flex-1 bg-primary hover:bg-primary/90" 
+              onClick={handleOpenPreview}
+            >
+              View Details
+            </Button>
+          </div>
         </CardFooter>
       );
     }
 
     if (isBlueprintResource(resource)) {
       return (
-        <CardFooter>
-          <div className="w-full">
-            <div className="text-sm text-zinc-400 mb-2">Install Command</div>
-            <div className="flex items-center space-x-2">
-              <div className="flex-1 bg-zinc-800 p-2 rounded-md text-xs font-mono overflow-auto">
-                {resource.install_cmd}
-              </div>
-              <Button 
-                className="bg-zinc-700 hover:bg-zinc-600 text-sm whitespace-nowrap" 
-                onClick={() => handleCopy(resource.install_cmd, "Install Command")}
-              >
-                Copy
-              </Button>
+        <CardFooter className="flex flex-col items-start w-full">
+          <div className="w-full mb-4">
+            <div className="text-sm text-zinc-400 mb-1">Install Command</div>
+            <div className="bg-zinc-800 p-2 rounded-md text-xs font-mono overflow-auto">
+              {resource.install_cmd}
             </div>
+          </div>
+          <div className="flex gap-2 w-full">
+            <Button 
+              className="flex-1 bg-zinc-700 hover:bg-zinc-600" 
+              onClick={() => handleCopy(resource.install_cmd, "Install Command")}
+            >
+              Copy Command
+            </Button>
+            <Button 
+              className="flex-1 bg-primary hover:bg-primary/90" 
+              onClick={handleOpenPreview}
+            >
+              View Details
+            </Button>
           </div>
         </CardFooter>
       );
@@ -174,74 +198,95 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
     );
   };
 
+  // Determine if the resource should have preview functionality
+  const hasPreview = isSkillResource(resource) || isBlueprintResource(resource);
+
+  // Get preview content based on resource type
+  const getPreviewContent = () => {
+    if (isSkillResource(resource)) {
+      return resource.content;
+    }
+    if (isBlueprintResource(resource)) {
+      return `# ${resource.name}\n\n${resource.description}\n\n## Tech Stack\n${resource.tech_stack.join(', ')}\n\n## Install Command\n\`\`\`bash\n${resource.install_cmd}\n\`\`\``;
+    }
+    return '';
+  };
+
   return (
-    <Card className="bg-zinc-900 border-zinc-800 text-white">
-      <CardHeader>
-        <CardTitle className="text-xl font-bold">{resource.name}</CardTitle>
-        <CardDescription className="text-zinc-400">{resource.description}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-zinc-400">Provider:</span>
-            <span className="text-sm font-medium">{resource.provider}</span>
+    <>
+      <Card 
+        className={`bg-zinc-900 border-zinc-800 text-white ${hasPreview ? 'cursor-pointer hover:shadow-lg hover:shadow-primary/20 transition-shadow' : ''}`}
+        onClick={hasPreview ? handleOpenPreview : undefined}
+      >
+        <CardHeader>
+          <CardTitle className="text-xl font-bold">{resource.name}</CardTitle>
+          <CardDescription className="text-zinc-400">{resource.description}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-zinc-400">Provider:</span>
+              <span className="text-sm font-medium">{resource.provider}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-zinc-400">Category:</span>
+              <span className="text-sm font-medium capitalize">{resource.category}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-zinc-400">Status:</span>
+              <span className={`text-sm font-medium capitalize ${resource.status === 'active' ? 'text-green-400' : resource.status === 'beta' ? 'text-yellow-400' : 'text-red-400'}`}>
+                {resource.status}
+              </span>
+            </div>
+            
+            {/* Additional fields based on category */}
+            {isComputeResource(resource) && (
+              <div className="mt-4">
+                <div className="text-sm text-zinc-400 mb-1">Model:</div>
+                <div className="bg-zinc-800 p-2 rounded-md text-sm font-mono">
+                  {resource.config.model}
+                </div>
+              </div>
+            )}
+            
+            {isToolResource(resource) && (
+              <div className="mt-4">
+                <div className="text-sm text-zinc-400 mb-1">Tool Type:</div>
+                <div className="bg-zinc-800 p-2 rounded-md text-sm">
+                  {resource.toolType}
+                </div>
+              </div>
+            )}
+            
+            {isSkillResource(resource) && (
+              <div className="mt-4">
+                <div className="text-sm text-zinc-400 mb-1">Skill Type:</div>
+                <div className="bg-zinc-800 p-2 rounded-md text-sm">
+                  {resource.skillType}
+                </div>
+              </div>
+            )}
+            
+            {isBlueprintResource(resource) && (
+              <div className="mt-4">
+                <div className="text-sm text-zinc-400 mb-1">Tech Stack:</div>
+                <div className="flex flex-wrap gap-2">
+                  {resource.tech_stack.map((tech, index) => (
+                    <span key={index} className="bg-zinc-800 px-2 py-1 rounded-md text-xs">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-zinc-400">Category:</span>
-            <span className="text-sm font-medium capitalize">{resource.category}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-zinc-400">Status:</span>
-            <span className={`text-sm font-medium capitalize ${resource.status === 'active' ? 'text-green-400' : resource.status === 'beta' ? 'text-yellow-400' : 'text-red-400'}`}>
-              {resource.status}
-            </span>
-          </div>
-          
-          {/* Additional fields based on category */}
-          {isComputeResource(resource) && (
-            <div className="mt-4">
-              <div className="text-sm text-zinc-400 mb-1">Model:</div>
-              <div className="bg-zinc-800 p-2 rounded-md text-sm font-mono">
-                {resource.config.model}
-              </div>
-            </div>
-          )}
-          
-          {isToolResource(resource) && (
-            <div className="mt-4">
-              <div className="text-sm text-zinc-400 mb-1">Tool Type:</div>
-              <div className="bg-zinc-800 p-2 rounded-md text-sm">
-                {resource.toolType}
-              </div>
-            </div>
-          )}
-          
-          {isSkillResource(resource) && (
-            <div className="mt-4">
-              <div className="text-sm text-zinc-400 mb-1">Skill Type:</div>
-              <div className="bg-zinc-800 p-2 rounded-md text-sm">
-                {resource.skillType}
-              </div>
-            </div>
-          )}
-          
-          {isBlueprintResource(resource) && (
-            <div className="mt-4">
-              <div className="text-sm text-zinc-400 mb-1">Tech Stack:</div>
-              <div className="flex flex-wrap gap-2">
-                {resource.tech_stack.map((tech, index) => (
-                  <span key={index} className="bg-zinc-800 px-2 py-1 rounded-md text-xs">
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </CardContent>
-      
-      {/* Dynamic Footer based on resource category */}
-      {renderCardFooter()}
+        </CardContent>
+        
+        {/* Dynamic Footer based on resource category */}
+        <CardFooter onClick={(e) => e.stopPropagation()}>
+          {renderCardFooter()}
+        </CardFooter>
+      </Card>
 
       {/* Cursor Connection Dialog for Compute Resources */}
       {isComputeResource(resource) && (
@@ -307,6 +352,17 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
           </DialogContent>
         </Dialog>
       )}
-    </Card>
+
+      {/* Resource Preview for Skill and Blueprint */}
+      {hasPreview && (
+        <ResourcePreview
+          open={isPreviewOpen}
+          onOpenChange={setIsPreviewOpen}
+          title={resource.name}
+          content={getPreviewContent()}
+          language={isSkillResource(resource) ? "markdown" : "markdown"}
+        />
+      )}
+    </>
   );
 }
