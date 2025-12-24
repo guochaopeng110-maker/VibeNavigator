@@ -6,16 +6,30 @@
     "category": "compute",
     "provider": "SiliconFlow",
     "url": "https://siliconflow.cn",
-    "features": ["高并发", "低延迟", "支持多模型", "灵活计费"],
+    "features": ["注册送14元", "国内极速", "OpenAI兼容"],
     "pricing": "按调用次数计费",
     "status": "active",
     "createdAt": "2025-12-23T00:00:00Z",
-    "updatedAt": "2025-12-23T00:00:00Z",
-    "config": {
-      "apiKey": "sk-xxx",
-      "baseUrl": "https://api.siliconflow.cn/v1",
-      "model": "Qwen/Qwen2.5-72B-Instruct"
-    }
+    "updatedAt": "2025-12-24T00:00:00Z",
+    "endpoint": "https://api.siliconflow.cn/v1",
+    "api_key_url": "https://siliconflow.cn/console/api-keys",
+    "models": [
+      {
+        "id": "deepseek-v3",
+        "name": "DeepSeek V3",
+        "is_free": true
+      },
+      {
+        "id": "deepseek-r1",
+        "name": "DeepSeek R1",
+        "is_free": true
+      },
+      {
+        "id": "qwen2.5-72b",
+        "name": "Qwen 2.5 72B",
+        "is_free": false
+      }
+    ]
   },
   {
     "id": "roo-code",
@@ -28,8 +42,9 @@
     "pricing": "免费版 + 付费套餐",
     "status": "active",
     "createdAt": "2025-12-23T00:00:00Z",
-    "updatedAt": "2025-12-23T00:00:00Z",
-    "toolType": "ide"
+    "updatedAt": "2025-12-24T00:00:00Z",
+    "platforms": ["vscode", "browser"],
+    "guide": "## Best Practice\nUse Roo with DeepSeek V3 for best cost-performance.\n\n### Key Tips\n- **Keyboard Shortcuts**: Use Ctrl+Shift+R to trigger Roo's AI refactoring\n- **Model Selection**: Always choose DeepSeek V3 for code generation tasks\n- **Cost Saving**: Enable auto-pause when not in use to save credits\n\n### Common Pitfalls\n- Avoid using Roo with large files (>10k lines) as it may slow down\n- Don't forget to set your API key in the settings\n- For best results, write clear prompts with specific requirements"
   },
   {
     "id": "open-spec",
@@ -42,8 +57,9 @@
     "pricing": "开源免费",
     "status": "beta",
     "createdAt": "2025-12-23T00:00:00Z",
-    "updatedAt": "2025-12-23T00:00:00Z",
+    "updatedAt": "2025-12-24T00:00:00Z",
     "skillType": "open-spec",
+    "sub_category": "open-spec",
     "content": "# OpenSpec API Specification\n\nThis is a sample OpenAPI specification for the OpenSpec API.\n\n```yaml\nopenapi: 3.0.0\ninfo:\n  title: OpenSpec API\n  version: 1.0.0\npaths:\n  /specs:\n    get:\n      summary: Get all specifications\n      responses:\n        '200':\n          description: A list of specifications\n```",
     "runtime": "browser"
   },
@@ -62,5 +78,22 @@
     "install_cmd": "npx create-next-app@latest my-ai-app -e https://github.com/vibenavigator/nextjs-ai-starter",
     "tech_stack": ["Next.js", "TypeScript", "Tailwind CSS", "OpenAI API"],
     "stars": 1200
+  },
+  {
+    "id": "github-mcp-server",
+    "name": "GitHub MCP Server",
+    "description": "GitHub 模型上下文协议服务器配置",
+    "category": "skill",
+    "provider": "GitHub",
+    "url": "https://github.com/mcp-protocol/mcp",
+    "features": ["模型上下文共享", "跨平台支持", "开源协议"],
+    "pricing": "开源免费",
+    "status": "active",
+    "createdAt": "2025-12-24T00:00:00Z",
+    "updatedAt": "2025-12-24T00:00:00Z",
+    "skillType": "custom",
+    "sub_category": "mcp-server",
+    "content": "{\n  \"version\": \"1.0.0\",\n  \"name\": \"GitHub MCP Server\",\n  \"description\": \"GitHub 模型上下文协议服务器配置\",\n  \"servers\": [\n    {\n      \"id\": \"github-main\",\n      \"name\": \"GitHub Main Server\",\n      \"url\": \"https://api.github.com/mcp\",\n      \"api_key\": \"${GITHUB_TOKEN}\",\n      \"models\": [\n        \"gpt-4o\",\n        \"claude-3-sonnet-20240229\",\n        \"gemini-pro\"\n      ],\n      \"features\": [\n        \"context-sharing\",\n        \"cross-platform\",\n        \"real-time-sync\"\n      ]\n    }\n  ],\n  \"default_server\": \"github-main\",\n  \"settings\": {\n    \"max_context_length\": 32768,\n    \"sync_interval\": 5000,\n    \"enable_logging\": true\n  }\n}",
+    "runtime": "nodejs"
   }
 ]

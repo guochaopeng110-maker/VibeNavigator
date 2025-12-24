@@ -1,11 +1,10 @@
 // Resource Type Definitions for Vibe Navigator v2.0
 // Based on PRD Section 4: Data Structure
-
 export type ResourceCategory = 'compute' | 'tool' | 'skill' | 'blueprint';
-
 export type ResourceStatus = 'active' | 'inactive' | 'beta';
-
 export type SkillType = 'open-spec' | 'custom' | 'api';
+export type SkillSubCategory = 'mcp-server' | 'claude-skill' | 'open-spec';
+export type ToolPlatform = 'vscode' | 'jetbrains' | 'cursor' | 'cli' | 'desktop' | 'browser';
 
 // Base Resource interface
 export interface BaseResource {
@@ -25,17 +24,20 @@ export interface BaseResource {
 // Compute Resource - For AI inference providers
 export interface ComputeResource extends BaseResource {
   category: 'compute';
-  config: {
-    apiKey: string;
-    baseUrl: string;
-    model: string;
-  };
+  endpoint: string;
+  api_key_url: string;
+  models: Array<{
+    id: string;
+    name: string;
+    is_free: boolean;
+  }>;
 }
 
 // Tool Resource - For developer tools
 export interface ToolResource extends BaseResource {
   category: 'tool';
-  toolType: 'ide' | 'cli' | 'web' | 'desktop';
+  platforms: ToolPlatform[];
+  guide: string; // Markdown format for Vibe Guide
   integration?: string;
 }
 
@@ -43,7 +45,8 @@ export interface ToolResource extends BaseResource {
 export interface SkillResource extends BaseResource {
   category: 'skill';
   skillType: SkillType;
-  content: string; // Markdown content for open-spec skills
+  sub_category: SkillSubCategory;
+  content: string; // Markdown or JSON content
   runtime?: 'python' | 'nodejs' | 'browser';
 }
 
