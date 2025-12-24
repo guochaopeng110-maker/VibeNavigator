@@ -67,24 +67,26 @@ export default function ResourcePreview({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="bg-zinc-900 border-zinc-800 text-white w-full sm:max-w-2xl">
-        <SheetHeader>
-          <SheetTitle className="text-xl font-bold">{title}</SheetTitle>
-        </SheetHeader>
-        
-        <div className="mt-6">
-          {renderContent()}
-        </div>
-        
-        <SheetFooter className="mt-6 flex justify-end">
-          <Button 
-            className="bg-primary hover:bg-primary/90 text-white" 
-            onClick={handleCopyContent}
-          >
-            Copy Full Content
-          </Button>
-        </SheetFooter>
-      </SheetContent>
+      {open && (
+        <SheetContent className="bg-zinc-900 border-zinc-800 text-white w-full sm:max-w-2xl">
+          <SheetHeader>
+            <SheetTitle className="text-xl font-bold">{title}</SheetTitle>
+          </SheetHeader>
+          
+          <div className="mt-6">
+            {renderContent()}
+          </div>
+          
+          <SheetFooter className="mt-6 flex justify-end">
+            <Button 
+              className="bg-primary hover:bg-primary/90 text-white" 
+              onClick={handleCopyContent}
+            >
+              Copy Full Content
+            </Button>
+          </SheetFooter>
+        </SheetContent>
+      )}
     </Sheet>
   );
 }

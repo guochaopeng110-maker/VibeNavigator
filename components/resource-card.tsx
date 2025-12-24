@@ -116,6 +116,7 @@ const getSubCategoryLabel = (subCategory: string): string => {
 export default function ResourceCard({ resource }: ResourceCardProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('cursor');
 
   const handleCopy = async (content: string, type: string) => {
     try {
@@ -339,7 +340,7 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
             <DialogHeader>
               <DialogTitle className="text-xl font-bold">Connect to {resource.name}</DialogTitle>
             </DialogHeader>
-            <Tabs defaultValue="cursor" className="mt-4">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
               <TabsList className="bg-zinc-800">
                 <TabsTrigger value="cursor">Cursor</TabsTrigger>
                 <TabsTrigger value="roo-code">Roo Code</TabsTrigger>
