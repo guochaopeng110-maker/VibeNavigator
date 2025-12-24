@@ -354,9 +354,9 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
       )}
 
       {/* Resource Preview for Skill and Blueprint */}
-      {hasPreview && (
+      {hasPreview && isPreviewOpen && (
         <ResourcePreview
-          open={isPreviewOpen}
+          open={true}
           onOpenChange={setIsPreviewOpen}
           title={resource.name}
           content={getPreviewContent()}
